@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Prometheus-X Catalog Registry",
+    "version": "0.1.0",
+    "description": "API documentation for Catalog Registry"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/v1",
+      "description": "API Server"
+    }
+  ],
+  "paths": {
+    "/references": {
+      "get": {
+        "summary": "Get all references",
+        "description": "Retrieve the list of all references from the catalog registry instance",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reference"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/references/{type}": {
+      "get": {
+        "summary": "Get references by type",
+        "description": "Retrieve the list of references by type from the catalog registry instance",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "description": "Type of the reference",
+            "schema": {
+              "$ref": "#/components/schemas/ReferenceType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reference"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new reference",
+        "description": "Create a new reference of the specified type",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "description": "Type of the reference",
+            "schema": {
+              "$ref": "#/components/schemas/ReferenceType"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "descriptions": {
+                    "description": "Description of the reference",
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/LanguageValue"
+                    }
+                  },
+                  "definitions": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/LanguageValue"
+                    }
+                  },
+                  "roleDefinitions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "responsibilitiesAndObligations": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["title"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reference"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReferenceType": {
+        "type": "string",
+        "description": "An available reference type",
+        "enum": [
+          "architecture",
+          "building-block",
+          "business-model",
+          "decision-process",
+          "direction",
+          "perimeter",
+          "pricing-model",
+          "requirement",
+          "roles",
+          "value-sharing"
+        ]
+      },
+      "Reference": {
+        "type": "object",
+        "description": "A reference model defined by Prometheus-X or users",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/ReferenceType"
+          },
+          "refURL": {
+            "description": "The Prometheus-X reference URL. If the field is null or empty, then it is not a Prometheus-X defined reference.",
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "description": "The name of the reference"
+          },
+          "jsonld": {
+            "description": "The full JSON-LD structure of the reference. Contains additional information than the base model.",
+            "type": "string"
+          }
+        }
+      },
+      "LanguageValue": {
+        "type": "object",
+        "description": "A JSON-LD object used for stating something in multiple languages.",
+        "properties": {
+          "@language": {
+            "description": "A valid ISO 639-1 language code",
+            "type": "string"
+          },
+          "@value": {
+            "description": "The string value for the corresponding language",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

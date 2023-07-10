@@ -3,7 +3,7 @@
   "info": {
     "title": "Prometheus-X Catalog Registry",
     "version": "0.1.0",
-    "description": "API documentation for Catalog Registry"
+    "description": "This component allows your catalog instance to easily access standard descriptions of datasets, services, roles, obligations and business models. You don't have to invent them yourself and you can describe your ecosystem quickly and in a standardised way!"
   },
   "servers": [
     {

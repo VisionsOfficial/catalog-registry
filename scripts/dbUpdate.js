@@ -43,11 +43,15 @@ mongoose
 
     // Define the directories to process
     const directories = [
+      "architecture",
+      "building-block",
       "business-model",
-      "perimeter",
       "decision-process",
-      "value-sharing",
+      "perimeter",
+      "pricing-model",
+      "requirement",
       "roles",
+      "value-sharing",
     ];
 
     const schema = new mongoose.Schema({
@@ -87,7 +91,7 @@ mongoose
           // Parse the JSON-LD content
           const jsonld = JSON.parse(fileContent);
           const refURL = jsonld["@id"];
-          const title = jsonld["title"];
+          const title = jsonld["title"] ? jsonld["title"]["@value"] : "";
 
           try {
             // Update or insert the document

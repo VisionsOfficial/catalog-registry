@@ -9,5 +9,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "reference-models": true
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "relative"
 }

@@ -10,7 +10,7 @@ export const globalErrorHandler = (
   next: NextFunction
 ) => {
   if (err instanceof ReferenceTypeError) {
-    res.status(400).json({
+    return res.status(400).json({
       error: "Unknown Reference Type",
       message: err.message,
       details: `Please provide a known reference type from the following list: ${acceptedTypes.join(
@@ -18,9 +18,9 @@ export const globalErrorHandler = (
       )}`,
     });
   } else if (err instanceof BadRequestError) {
-    res.status(400).json(err.jsonResponse());
+    return res.status(400).json(err.jsonResponse());
   } else {
-    res.status(500).json({
+    return res.status(500).json({
       error: "Internal Server Error",
       message: "Something went wrong",
     });

@@ -14,5 +14,5 @@
     "lib": ["ES2021.String", "ES7"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "docs"]
+  "include": ["src/**/*"]
 }

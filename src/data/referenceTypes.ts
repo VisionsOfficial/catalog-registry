@@ -1,7 +1,11 @@
 export const acceptedTypes = [
+  "architecture",
+  "building-block",
   "business-model",
-  "perimeter",
   "decision-process",
-  "value-sharing",
+  "perimeter",
+  "pricing-model",
+  "requirement",
   "roles",
+  "value-sharing",
 ];

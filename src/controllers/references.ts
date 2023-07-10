@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { DefinedReference } from "../models/DefinedReference/DefinedReference.model";
-import { BadRequestError } from "../errors/BadRequestError";
 import { mapLanguageValueArray } from "../utils/parseLanguageValue";
 
 /**
@@ -87,11 +86,6 @@ export const createUserDefinedReference = async (
       responsibilitiesAndObligations,
     }: ReferenceCreationPayload = req.body;
 
-    if (!title)
-      throw new BadRequestError("Missing mandatory parameters from payload", [
-        { field: "title", message: "Missing parameter title" },
-      ]);
-
     const newRef = new DefinedReference({
       type,
       title,
@@ -129,7 +123,7 @@ export const createUserDefinedReference = async (
     newRef.jsonld = JSON.stringify(jsonldData);
 
     await newRef.save();
-    return res.json(newRef);
+    return res.status(201).json(newRef);
   } catch (err) {
     next(err);
   }

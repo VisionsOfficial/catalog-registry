@@ -4,13 +4,14 @@
   "description": "Prometheus-X Catalog Registry",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "dev": "pnpx nodemon",
     "build": "rimraf ./build && tsc",
-    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts --timeout 4000",
+    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts --timeout 4000 --exit",
     "prettier": "prettier --write ./src/",
     "lint": "eslint src/**/*.{ts,js}",
     "lint:fix": "eslint src/**/*.{ts,js} --fix",
+    "format": "npm run prettier && npm run lint:fix",
     "postinstall": "git clone https://github.com/Prometheus-X-association/reference-models.git && echo \"\n\nAll done, please setup your database with the reference models by running npm run db:init\"",
     "db:init": "node scripts/dbUpdate.js",
     "db:update": "rm -rf reference-models && git clone https://github.com/Prometheus-X-association/reference-models.git && node scripts/dbUpdate.js"
@@ -24,6 +25,18 @@
     "name": "Felix Bole",
     "url": "https://github.com/FelixBole"
   },
+  "maintainers": [
+    {
+      "name": "Felix Bole",
+      "url": "https://github.com/FelixBole"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Felix Bole",
+      "url": "https://github.com/FelixBole"
+    }
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.3.4",

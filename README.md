@@ -26,9 +26,11 @@ To install and run the Prometheus-X Catalog Registry, follow these steps:
 
 ## API Documentation
 
-For detailed information on how to use the Prometheus-X Catalog Registry API, refer to the API documentation. The documentation provides comprehensive details on the available endpoints, request/response formats, authentication mechanisms, and examples.
+For detailed information on how to use the Prometheus-X Catalog Registry API, refer to the API documentation. The documentation provides comprehensive details on the available endpoints, request/response formats and examples.
 
-You can access the API documentation at `http://your-registry-url/docs` or `http://your-registry-url/swagger` after starting the application.
+You can access the API documentation from your instance at `http://your-registry-url/docs` after starting the application.
+
+You can also access the github pages of this repository that services an example swagger for easy access without installing the project.
 
 ## Contributing
 

@@ -8,4 +8,6 @@ export const acceptedTypes = [
   "requirement",
   "roles",
   "value-sharing",
+  "data-categories",
+  "service-categories",
 ];

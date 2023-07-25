@@ -52,6 +52,8 @@ mongoose
       "requirement",
       "roles",
       "value-sharing",
+      "data-categories",
+      "service-categories",
     ];
 
     const schema = new mongoose.Schema({
@@ -91,7 +93,11 @@ mongoose
           // Parse the JSON-LD content
           const jsonld = JSON.parse(fileContent);
           const refURL = jsonld["@id"];
-          const title = jsonld["title"] ? jsonld["title"]["@value"] : "";
+          const title = jsonld["title"]
+            ? jsonld["title"]["@value"]
+            : jsonld["name"]
+            ? jsonld["name"]["@value"]
+            : "";
 
           try {
             // Update or insert the document

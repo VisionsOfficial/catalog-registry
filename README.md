@@ -2,6 +2,12 @@
 
 The Prometheus-X Catalog Registry is a REST API service designed to handle updates of reference models from the Prometheus-X Reference Models GitHub repository and synchronize them with a database. In addition, it provides support for catalog instance-defined reference models, including roles, value sharing, business models, building blocks, requirements, and more.
 
+## Prometheus-X Service Ecosystem
+
+The Catalog Registry is one of the components allowing management of the catalog. Even though it is independant and serves its own purpose, users of a catalog will need interaction with more than one service. Thus, if you want to run a full catalog, consider looking into deploying the [Catalog API](https://github.com/Prometheus-X-association/catalog-api) and the [Ecosystem Matcher](https://github.com/Prometheus-X-association/ecosystem-matcher).
+
+In addition, the Prometheus-X Full specifications can be found on the [Prometheus-X docs repo/wiki](https://github.com/Prometheus-X-association/docs/wiki/Prometheus%E2%80%90X-Building-Blocks:-Enabling-Secure-Data-Ecosystems-and-Consent%E2%80%90driven-Data-Sharing)
+
 ## Features
 
 The Prometheus-X Catalog Registry offers the following features:
@@ -30,7 +36,7 @@ For detailed information on how to use the Prometheus-X Catalog Registry API, re
 
 You can access the API documentation from your instance at `http://your-registry-url/docs` after starting the application.
 
-You can also access the github pages of this repository that services an example swagger for easy access without installing the project.
+You can also access the [github pages](https://prometheus-x-association.github.io/catalog-registry/) of this repository that services an example swagger for easy access without installing the project.
 
 ## Contributing
 

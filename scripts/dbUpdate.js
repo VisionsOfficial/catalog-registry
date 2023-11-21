@@ -15,21 +15,21 @@ console.log("\n\nStarting database update\n\n");
 const requiredEnvVars = ["MONGO_HOST", "MONGO_PORT", "MONGO_DATABASE", "API_URL"];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
-// if (missingEnvVars.length > 0) {
-//   console.error(
-//     `${RED} Missing environment variables: ${missingEnvVars.join(
-//       ", "
-//     )} ${RESET}`
-//   );
-//   process.exit(1);
-// }
+if (missingEnvVars.length > 0) {
+  console.error(
+    `${RED} Missing environment variables: ${missingEnvVars.join(
+      ", "
+    )} ${RESET}`
+  );
+  process.exit(1);
+}
 
 // Construct the MongoDB URI
-let mongoUri = `mongodb://${process.env.MONGO_HOST || "localhost"}:${process.env.MONGO_PORT || 27017}/${process.env.MONGO_DATABASE || "catalog-registry"}`;
+let mongoUri = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
 
 // Append username and password if available
 if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD) {
-  mongoUri = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST || "localhost"}:${process.env.MONGO_PORT || 27017}/${process.env.MONGO_DATABASE || "catalog-registry"}`;
+  mongoUri = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
 }
 
 // Connect to the MongoDB database
@@ -95,7 +95,7 @@ mongoose
           // New refUrl and ptxOriginURL
           const RefURLSplit = jsonld["@id"].split("/");
           const fileName = RefURLSplit[RefURLSplit.length -1];
-          const refURL =`${process.env.API_URL?.slice(0, -3) || "http://localhost:3000"}/static/${directory}/${fileName}`;
+          const refURL =`${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName}`;
           const ptxOriginURL = jsonld["@id"];
           jsonld["@id"] = refURL;
 
@@ -121,7 +121,7 @@ mongoose
                     }
                     // if file already exists, we add the "-ptx" suffix on the file and we wait all the promise (writefile and insert)
                     else {
-                      const refURLPtx = `${process.env.API_URL?.slice(0, -3) || "http://localhost:3000"}/static/${directory}/${fileName.slice(0,-5)}-ptx.json}`
+                      const refURLPtx = `${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName.slice(0,-5)}-ptx.json}`
                       jsonld["@id"] = refURLPtx;
                       await Promise.all([
                       fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName.slice(0,-5)}-ptx.json`), JSON.stringify(jsonld, null, 2)),

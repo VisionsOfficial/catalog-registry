@@ -12,7 +12,7 @@ const path = require("path");
 console.log("\n\nStarting database update\n\n");
 
 // Check if all required environment variables are set
-const requiredEnvVars = ["MONGO_HOST", "MONGO_PORT", "MONGO_DATABASE"];
+const requiredEnvVars = ["MONGO_HOST", "MONGO_PORT", "MONGO_DATABASE", "API_URL"];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
@@ -41,24 +41,11 @@ mongoose
   .then(async () => {
     console.log(`${GREEN} Connected to MongoDB ${RESET}`);
 
-    // Define the directories to process
-    const directories = [
-      "architecture",
-      "building-block",
-      "business-model",
-      "decision-process",
-      "perimeter",
-      "pricing-model",
-      "requirement",
-      "roles",
-      "value-sharing",
-      "data-categories",
-      "service-categories",
-    ];
 
     const schema = new mongoose.Schema({
       type: { type: String, required: true },
       refURL: { type: String, required: false },
+      ptxOriginURL: { type: String, required: false },
       title: { type: String, unique: true, required: true },
       jsonld: { type: String, required: true },
     });
@@ -68,6 +55,18 @@ mongoose
       { title: 1 },
       { unique: true }
     );
+
+    // dynamically retrieve all the directories needed to insert in database and copy in static dir in references directory
+    const dir = await fs.promises.readdir(path.join(
+        __dirname,
+        "..",
+        "reference-models",
+        "src",
+        "references"
+    ));
+
+    // no need of the index.json in array
+    const directories = dir.filter(e => e !== "index.json")
 
     // Process each directory
     const processDirectories = directories.map(async (directory) => {
@@ -92,7 +91,14 @@ mongoose
 
           // Parse the JSON-LD content
           const jsonld = JSON.parse(fileContent);
-          const refURL = jsonld["@id"];
+
+          // New refUrl and ptxOriginURL
+          const RefURLSplit = jsonld["@id"].split("/");
+          const fileName = RefURLSplit[RefURLSplit.length -1];
+          const refURL =`${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName}`;
+          const ptxOriginURL = jsonld["@id"];
+          jsonld["@id"] = refURL;
+
           const title = jsonld["title"]
             ? jsonld["title"]["@value"]
             : jsonld["name"]
@@ -100,12 +106,37 @@ mongoose
             : "";
 
           try {
-            // Update or insert the document
-            await DefinedReference.findOneAndUpdate(
-              { title },
-              { type: directory, refURL, jsonld: fileContent },
-              { upsert: true }
-            );
+            // Update or insert the document and create static file
+              await fs.promises.mkdir(path.join(__dirname, `../static/${directory}`), {recursive: true})
+                  .then(async x => {
+                    // if file doesn't exist we wait all the promise (writefile and insert)
+                    if(!fs.existsSync(path.join(__dirname, `../static/${directory}/${fileName}`))){
+                      await Promise.all([
+                          fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName}`), JSON.stringify(jsonld, null, 2)),
+                      DefinedReference.findOneAndUpdate(
+                          {title},
+                          {type: directory, refURL, ptxOriginURL , jsonld: JSON.stringify(jsonld)},
+                          {upsert: true}
+                      )])
+                    }
+                    // if file already exists, we add the "-ptx" suffix on the file and we wait all the promise (writefile and insert)
+                    else {
+                      const refURLPtx = `${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName.slice(0,-5)}-ptx.json}`
+                      jsonld["@id"] = refURLPtx;
+                      await Promise.all([
+                      fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName.slice(0,-5)}-ptx.json`), JSON.stringify(jsonld, null, 2)),
+                      DefinedReference.findOneAndUpdate(
+                          {title},
+                          {
+                            type: directory,
+                            refURL: refURLPtx,
+                            ptxOriginURL ,
+                            jsonld: JSON.stringify(jsonld)
+                          },
+                          {upsert: true}
+                      )])
+                    }
+                  });
           } catch (error) {
             console.error(`Error processing file ${file}:`, error);
           }

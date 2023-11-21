@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { DefinedReference } from "../models/DefinedReference/DefinedReference.model";
 import { mapLanguageValueArray } from "../utils/parseLanguageValue";
+import fs from "fs";
+import path from "path";
 
 /**
  * Retrieves all reference models
@@ -86,13 +88,17 @@ export const createUserDefinedReference = async (
       responsibilitiesAndObligations,
     }: ReferenceCreationPayload = req.body;
 
+    let jsonldData: any;
+
+    const refURL = `${
+      process.env.API_URL?.slice(0, -3) || "http://localhost:3000"
+    }/static/${type}/${title}.json`;
+
     const newRef = new DefinedReference({
       type,
-      title,
-      refURL: null,
+      title: title.charAt(0).toUpperCase() + title.slice(1),
+      refURL: refURL ?? null,
     });
-
-    let jsonldData;
 
     // Create JSON-LD for the new reference
     if (type === "roles") {
@@ -117,12 +123,30 @@ export const createUserDefinedReference = async (
           },
         },
         title,
+        "@id": refURL,
         definition: mapLanguageValueArray(definitions) || [],
       };
     }
+
     newRef.jsonld = JSON.stringify(jsonldData);
 
-    await newRef.save();
+    await Promise.all([
+      newRef.save(),
+      fs.promises
+        .mkdir(path.join(__dirname, `../../static/${type}`), {
+          recursive: true,
+        })
+        .then((x) =>
+          fs.promises.writeFile(
+            path.join(
+              __dirname,
+              `../../static/${type}/${jsonldData.title.toString()}.json`
+            ),
+            JSON.stringify(jsonldData, null, 2)
+          )
+        ),
+    ]);
+
     return res.status(201).json(newRef);
   } catch (err) {
     next(err);

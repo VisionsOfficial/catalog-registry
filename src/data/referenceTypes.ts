@@ -9,6 +9,7 @@ export const acceptedTypes = [
   "pricing-model",
   "requirement",
   "roles",
+  "rules",
   "service-categories",
   "value-sharing",
 ];

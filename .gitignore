@@ -2,3 +2,4 @@ node_modules
 dist
 reference-models/
 .env
+static/

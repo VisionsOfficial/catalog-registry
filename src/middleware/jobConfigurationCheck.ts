@@ -3,6 +3,7 @@ import { ReferenceTypeError } from "../errors/ReferenceTypeError";
 import { BadRequestError } from "../errors/BadRequestError";
 import { jobs } from "../data/jobs";
 import { FrequencyEnum } from "../utils/enums/frequencyEnum";
+import { JobConfigurationError } from "../errors/jobConfigurationError";
 
 /**
  * Verifies that the job is a known one
@@ -15,7 +16,7 @@ export const checkJob = async (
   try {
     const { job } = req.params;
     if (!jobs.includes(job)) {
-      throw new ReferenceTypeError("Provided job name is unknown");
+      throw new JobConfigurationError("Provided job name is unknown");
     }
     next();
   } catch (err) {

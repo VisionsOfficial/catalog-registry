@@ -8,13 +8,15 @@ import {
   checkJob,
   checkPayloadOnJobConfigurationUpdate,
 } from "../middleware/jobConfigurationCheck";
+import { apiKeyCheck } from "../middleware/apiKeyCheck";
 
 const r: Router = Router();
 
-r.get("/", getAllConfiguration);
-r.get("/:job", checkJob, getJobConfigurationByName);
+r.get("/", apiKeyCheck, getAllConfiguration);
+r.get("/:job", apiKeyCheck, checkJob, getJobConfigurationByName);
 r.patch(
   "/:job",
+  apiKeyCheck,
   checkJob,
   checkPayloadOnJobConfigurationUpdate,
   updateJobConfiguration

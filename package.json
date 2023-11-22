@@ -1,6 +1,6 @@
 {
   "name": "catalog-registry",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Prometheus-X Catalog Registry",
   "main": "dist/index.js",
   "scripts": {

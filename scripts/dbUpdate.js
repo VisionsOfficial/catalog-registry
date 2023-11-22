@@ -121,7 +121,7 @@ mongoose
                     }
                     // if file already exists, we add the "-ptx" suffix on the file and we wait all the promise (writefile and insert)
                     else {
-                      const refURLPtx = `${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName.slice(0,-5)}-ptx.json}`
+                      const refURLPtx = `${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName.slice(0,-5)}-ptx.json`
                       jsonld["@id"] = refURLPtx;
                       await Promise.all([
                       fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName.slice(0,-5)}-ptx.json`), JSON.stringify(jsonld, null, 2)),

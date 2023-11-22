@@ -6,5 +6,3 @@ import { startServer } from "./server";
 import job from "../cronjob/dbUpdateJob";
 
 startServer();
-
-job();

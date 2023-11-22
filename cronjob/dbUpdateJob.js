@@ -70,17 +70,12 @@ const job = () => {
               console.log(`error: ${error.message}`);
               return;
             }
-            if (stderr) {
-              // eslint-disable-next-line no-console,no-undef
-              console.log(`stderr: ${stderr}`);
-              return;
-            }
             // eslint-disable-next-line no-console,no-undef
-            console.log(`stdout: ${stdout}`);
+            console.log(`Job Launched successfully`);
           });
         },
         {
-          scheduled: dbUpdateJobConfiguration.scheduled,
+          scheduled: dbUpdateJobConfiguration?.scheduled ?? true,
           // eslint-disable-next-line no-undef
           timezone: process.env.JOB_TIMEZONE,
         }

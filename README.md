@@ -27,8 +27,9 @@ To install and run the Prometheus-X Catalog Registry, follow these steps:
 3. Install the required dependencies: `npm install`
 4. Configure the application by setting up the necessary environment variables. You will need to specify database connection details and other relevant settings.
 5. Initialize your database by running `npm run db:init`
-6. Start the application: `npm start`
-7. The Prometheus-X Catalog Registry will be accessible at the specified URL.
+6. Build the App `npm build`
+7. Start the application: `npm start`
+8. The Prometheus-X Catalog Registry will be accessible at the specified URL.
 
 ## API Documentation
 

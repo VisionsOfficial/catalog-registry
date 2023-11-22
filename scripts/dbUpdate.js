@@ -95,7 +95,7 @@ mongoose
           // New refUrl and ptxOriginURL
           const RefURLSplit = directory !== "rules" ? jsonld["@id"]?.split("/") : jsonld["uid"];
           const fileName = directory !== "rules" ? RefURLSplit[RefURLSplit.length -1] : `${ RefURLSplit }.json`;
-          const refURL =`${process.env.API_URL?.slice(0, -3) || "http://localhost:3000"}/static/${directory}/${fileName}`;
+          const refURL =`${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName}`;
           const ptxOriginURL = jsonld["@id"];
           jsonld["@id"] = refURL;
 

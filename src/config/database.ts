@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import jobConfigurationSeed from "../seed/jobConfigurationSeed";
+import Job from "../../cronjob/dbUpdateJob";
 
 export async function loadMongoose() {
   let mongoUri = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
@@ -14,6 +16,14 @@ export async function loadMongoose() {
     // eslint-disable-next-line
     console.error.bind(console, "MongoDB connection error: ")
   );
+
+  await jobConfigurationSeed().then(() => {
+    // Job lauch after succesfully seeded the database
+    // temprarily here to not broke the unit tests
+    Job();
+
+    console.log("Seed succeeded");
+  });
 
   return connection;
 }

@@ -6,6 +6,7 @@ import { globalErrorHandler } from "../middleware/globalErrorHandler";
 
 import swaggerUI from "swagger-ui-express";
 import swaggerSpec from "../../docs/swagger.json";
+import jobConfigurations from "./jobConfigurations";
 
 const API_PREFIX = "/v1";
 
@@ -15,5 +16,6 @@ export const loadRoutes = (app: Application) => {
   });
   app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
   app.use(`${API_PREFIX}/references`, references);
+  app.use(`${API_PREFIX}/jobs`, jobConfigurations);
   app.use(globalErrorHandler);
 };

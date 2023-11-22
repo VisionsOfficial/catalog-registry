@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jobConfigurationSeed from "../seed/jobConfigurationSeed";
 
 export async function loadMongoose() {
   let mongoUri = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
@@ -14,6 +15,8 @@ export async function loadMongoose() {
     // eslint-disable-next-line
     console.error.bind(console, "MongoDB connection error: ")
   );
+
+  await jobConfigurationSeed().then(() => console.log("Seed succeeded"));
 
   return connection;
 }

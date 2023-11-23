@@ -37,12 +37,21 @@ export const getReferencesByType = async (
       await Promise.all(
         data.map(async (role) => {
           const roleJsonldData = JSON.parse(role.jsonld);
-          roleJsonldData.responsibilitiesAndObligations =
-            await DefinedReference.find({
+          const test = await DefinedReference.find(
+            {
               uid: {
                 $in: roleJsonldData.responsibilitiesAndObligations,
               },
-            });
+            },
+            {
+              _id: 0,
+              jsonld: 1,
+            }
+          );
+
+          roleJsonldData.responsibilitiesAndObligations = test.map(
+            (item: any) => JSON.parse(item.jsonld)
+          );
 
           role.jsonld = JSON.stringify(roleJsonldData);
         })

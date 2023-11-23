@@ -101,8 +101,10 @@ mongoose
 
           const title = jsonld["title"]
             ? jsonld["title"]["@value"]
-            : jsonld["name"]
+            : jsonld["name"]["@value"]
             ? jsonld["name"]["@value"]
+            : jsonld["name"]
+            ? jsonld["name"]
             : "";
 
           try {

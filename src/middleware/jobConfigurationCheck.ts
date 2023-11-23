@@ -16,7 +16,12 @@ export const checkJob = async (
   try {
     const { job } = req.params;
     if (!jobs.includes(job)) {
-      throw new JobConfigurationError("Provided job name is unknown");
+      throw new BadRequestError("job name is not valid", [
+        {
+          field: "job",
+          message: "Provided job name is unknown",
+        },
+      ]);
     }
     next();
   } catch (err) {

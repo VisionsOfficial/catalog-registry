@@ -28,7 +28,7 @@ export const getJobConfigurationByName = async (
 ) => {
   try {
     const { job } = req.params;
-    const data = await jobConfiguration.find({ job });
+    const data = await jobConfiguration.findOne({ job });
     return res.json(data);
   } catch (err) {
     next(err);

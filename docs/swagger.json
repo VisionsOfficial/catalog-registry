@@ -131,9 +131,133 @@
           }
         }
       }
+    },
+    "/jobs": {
+      "get": {
+        "summary": "Get all jobs configuration",
+        "description": "Retrieve the list of all job configuration",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JobConfiguration"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job}": {
+      "get": {
+        "summary": "Get job configuration by job name",
+        "description": "Retrieve a job configuration by job name",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "description": "Name of the job",
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JobConfiguration"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a job configuration",
+        "description": "Update the frequency and the scheduling of a job",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "description": "Name of the job",
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "scheduled": {
+                    "description": "Enable or disable the scheduling of the job",
+                    "type": "boolean"
+                  },
+                  "frequency": {
+                    "description": "Frequency of the scheduled job",
+                    "type": "string",
+                    "items": {
+                      "$ref": "#/components/schemas/FrequencyValue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobConfiguration"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
     "schemas": {
       "ReferenceType": {
         "type": "string",
@@ -185,6 +309,39 @@
             "type": "string"
           }
         }
+      },
+      "JobName": {
+        "type": "string",
+        "description": "An available job Configuration",
+        "enum": [
+          "dbUpdateJob"
+        ]
+      },
+      "JobConfiguration": {
+        "type": "object",
+        "description": "A job configuration",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/JobName"
+          },
+          "scheduled": {
+            "description": "a boolean that enable or disable the scheduling of the job",
+            "type": "boolean"
+          },
+          "frequency": {
+            "$ref": "#/components/schemas/FrequencyValue"
+          }
+        }
+      },
+      "FrequencyValue": {
+        "type": "string",
+        "description": "A enum of available frequency of jobs scheduling.",
+        "enum": [
+          "DAILY",
+          "WEEKLY",
+          "MONTHLY",
+          "ANNUALLY"
+        ]
       }
     }
   }

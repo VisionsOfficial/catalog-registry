@@ -46,7 +46,16 @@
             "schema": {
               "$ref": "#/components/schemas/ReferenceType"
             }
-          }
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "required": false,
+            "description": "populate relationships",
+            "schema": {
+              "$ref": "#/components/schemas/ReferencePopulate"
+              }
+            }
         ],
         "responses": {
           "200": {
@@ -342,6 +351,10 @@
           "MONTHLY",
           "ANNUALLY"
         ]
+      },
+      "ReferencePopulate": {
+        "type": "boolean",
+        "description": "Boolean to populate or not the relationships"
       }
     }
   }

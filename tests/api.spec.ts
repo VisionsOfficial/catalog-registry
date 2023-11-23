@@ -6,6 +6,7 @@ config();
 import { startServer } from "../src/server";
 import { IncomingMessage, Server, ServerResponse } from "http";
 import { jobConfiguration } from "../src/models/JobConfiguration/JobConfiguration.model";
+import { FrequencyEnum } from "../src/utils/enums/frequencyEnum";
 
 describe("API Tests", () => {
   let app: Express.Application;
@@ -128,12 +129,98 @@ describe("API Tests", () => {
     });
   });
 
+  describe("GET /v1/jobs/:job  - Job name error", () => {
+    it("should respond with code 400 and Job name error", async () => {
+
+      const response = await request(app).get(`/v1/jobs/dbupdate`).set({ "x-api-key": process.env.API_KEY});
+      console.log(response.body)
+      expect(response.status).to.equal(400);
+      expect(response.body)
+        .to.be.an("object")
+        .that.has.property("error", "job name is not valid");
+    });
+  });
+
   describe("GET /v1/jobs/:job", () => {
     it("should respond with json and a job configuration for the specified job", async () => {
 
       const response = await request(app).get(`/v1/jobs/dbUpdateJob`).set({ "x-api-key": process.env.API_KEY});
       expect(response.status).to.equal(200);
       console.log(response.body);
+    });
+  });
+
+  describe("PATCH /v1/jobs/:job - API KEY error", () => {
+    it("should respond with code 400 and Header error", async () => {
+
+      const response = await request(app).patch(`/v1/jobs/dbUpdateJob`);
+      expect(response.status).to.equal(400);
+      expect(response.body)
+        .to.be.an("object")
+        .that.has.property("error", "Header Error");
+    });
+  });
+
+  describe("PATCH /v1/jobs/:job - Job name error", () => {
+    it("should respond with code 400 and Job name error", async () => {
+
+      const payload = {
+        scheduled: true,
+        frequency: FrequencyEnum.DAILY,
+      };
+
+      const response = await request(app)
+        .patch(`/v1/jobs/dbUpdate`)
+        .send(payload)
+        .set({
+          "x-api-key": process.env.API_KEY,
+          "Content-Type": "application/json"
+        });
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.be.an("object")
+        .that.has.property("error", "job name is not valid");
+    });
+  });
+
+  describe("PATCH /v1/jobs/:job - Frequency input wrong format", () => {
+    it("should respond with code 400 and frequency validation error", async () => {
+
+      const payload = {
+        frequency: "daily",
+      };
+
+      const response = await request(app)
+        .patch(`/v1/jobs/dbUpdateJob`)
+        .send(payload)
+        .set({
+          "x-api-key": process.env.API_KEY,
+          "Content-Type": "application/json"
+        });
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.be.an("object").that.has.property("error", "frequency is not valid");
+    });
+  });
+
+  describe("PATCH /v1/jobs/:job", () => {
+    it("should update a job configuration and respond with the updated data", async () => {
+
+      const payload = {
+        scheduled: true,
+        frequency: FrequencyEnum.DAILY,
+      };
+
+      const response = await request(app)
+        .patch(`/v1/jobs/dbUpdateJob`)
+        .send(payload)
+        .set({
+          "x-api-key": process.env.API_KEY,
+          "Content-Type": "application/json"
+        });
+
+      expect(response.status).to.equal(201);
+      expect(response.body).to.be.an("object").that.has.property("scheduled", true);
     });
   });
 });

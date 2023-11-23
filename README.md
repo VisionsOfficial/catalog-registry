@@ -19,8 +19,9 @@ The Prometheus-X Catalog Registry offers the following features:
 3. **REST API**: The Prometheus-X Catalog Registry is built as a RESTful API, making it easy to integrate and interact with other services or applications. Catalog participants and data ecosystem administrators can utilize the API to retrieve and create information for the registry.
 
 ## Installation
+### Locally
 
-To install and run the Prometheus-X Catalog Registry, follow these steps:
+To install and run the Prometheus-X Catalog Registry without docker, follow these steps:
 
 1. Clone the repository from GitHub: `git clone https://github.com/prometheus-x/catalog-registry.git`
 2. Navigate to the project directory: `cd catalog-registry`
@@ -30,6 +31,13 @@ To install and run the Prometheus-X Catalog Registry, follow these steps:
 6. Build the App `npm build`
 7. Start the application: `npm start`
 8. The Prometheus-X Catalog Registry will be accessible at the specified URL.
+
+### Docker
+1. Clone the repository from GitHub: `git clone https://github.com/prometheus-x/catalog-registry.git`
+2. Navigate to the project directory: `cd catalog-registry`
+3. Configure the application by setting up the necessary environment variables. You will need to specify database connection details and other relevant settings.
+4. Start the application: `docker-compose up -d`
+5. If you need to rebuild the image `docker-compose build` and restart with: `docker-compose up -d` 
 
 ## API Documentation
 

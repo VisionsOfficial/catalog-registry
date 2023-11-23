@@ -19,7 +19,7 @@ const job = () => {
   // eslint-disable-next-line no-undef
   if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD) {
     // eslint-disable-next-line no-undef
-    mongoUri = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
+    mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/${process.env.MONGO_DATABASE}`;
   }
 
   // Connect to the MongoDB database

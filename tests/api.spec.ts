@@ -5,6 +5,7 @@ config();
 
 import { startServer } from "../src/server";
 import { IncomingMessage, Server, ServerResponse } from "http";
+import { jobConfiguration } from "../src/models/JobConfiguration/JobConfiguration.model";
 
 describe("API Tests", () => {
   let app: Express.Application;
@@ -95,6 +96,44 @@ describe("API Tests", () => {
         .set("Content-Type", "application/json");
 
       expect(res.status).to.equal(201);
+    });
+  });
+
+  describe("GET /v1/jobs - API KEY error", () => {
+    it("should respond with code 400 and Header error", async () => {
+      const response = await request(app).get("/v1/jobs");
+      expect(response.status).to.equal(400);
+      expect(response.body)
+        .to.be.an("object")
+        .that.has.property("error", "Header Error");
+    });
+  });
+
+  describe("GET /v1/jobs", () => {
+    it("should respond with json and an array of job configurations", async () => {
+      const response = await request(app).get("/v1/jobs").set({ "x-api-key": process.env.API_KEY});
+      expect(response.status).to.equal(200);
+      expect(response.body).to.be.an("array");
+    });
+  });
+
+  describe("GET /v1/jobs/:job  - API KEY error", () => {
+    it("should respond with code 400 and Header error", async () => {
+
+      const response = await request(app).get(`/v1/jobs/dbUpdateJob`);
+      expect(response.status).to.equal(400);
+      expect(response.body)
+        .to.be.an("object")
+        .that.has.property("error", "Header Error");
+    });
+  });
+
+  describe("GET /v1/jobs/:job", () => {
+    it("should respond with json and a job configuration for the specified job", async () => {
+
+      const response = await request(app).get(`/v1/jobs/dbUpdateJob`).set({ "x-api-key": process.env.API_KEY});
+      expect(response.status).to.equal(200);
+      console.log(response.body);
     });
   });
 });

@@ -12,7 +12,7 @@ const path = require("path");
 console.log("\n\nStarting database update\n\n");
 
 // Check if all required environment variables are set
-const requiredEnvVars = ["MONGO_HOST", "MONGO_PORT", "MONGO_DATABASE", "API_URL"];
+const requiredEnvVars = ["MONGO_HOST", "MONGO_DATABASE", "API_URL"];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
@@ -29,7 +29,7 @@ let mongoUri = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${
 
 // Append username and password if available
 if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD) {
-  mongoUri = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
+  mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/${process.env.MONGO_DATABASE}`;
 }
 
 // Connect to the MongoDB database

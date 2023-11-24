@@ -141,6 +141,47 @@
         }
       }
     },
+    "/references/{type}/{fileName}": {
+      "get": {
+        "summary": "Get reference by type and file name",
+        "description": "Retrieve the jsonld of a reference",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "description": "Type of the reference",
+            "schema": {
+              "$ref": "#/components/schemas/ReferenceType"
+            }
+          },
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "description": "File name",
+            "schema": {
+              "$ref": "#/components/schemas/FileName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Jsonld"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/jobs": {
       "get": {
         "summary": "Get all jobs configuration",
@@ -355,6 +396,14 @@
       "ReferencePopulate": {
         "type": "boolean",
         "description": "Boolean to populate or not the relationships"
+      },
+      "FileName": {
+        "type": "string",
+        "description": "File name of the reference"
+      },
+      "Jsonld": {
+        "type": "object",
+        "description": "A jsonld parsed of a reference"
       }
     }
   }

@@ -96,7 +96,7 @@ mongoose
           // New refUrl and ptxOriginURL
           const RefURLSplit = jsonld["@id"]?.split("/");
           const fileName = RefURLSplit[RefURLSplit.length -1];
-          const refURL =`${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName}`;
+          const refURL =`${process.env.API_URL?.slice(0, -3)}/static/references/${directory}/${fileName}`;
           const ptxOriginURL = jsonld["@id"];
           jsonld["@id"] = refURL;
 
@@ -108,7 +108,7 @@ mongoose
             ? jsonld["name"]
             : "";
 
-          const uid = jsonld["uid"] ?? null;
+          const uid = jsonld["uid"] ?? fileName.slice(0,-5);
 
           try {
             // Update or insert the document and create static file
@@ -126,21 +126,22 @@ mongoose
                     }
                     // if file already exists, we add the "-ptx" suffix on the file and we wait all the promise (writefile and insert)
                     else {
-                      const refURLPtx = `${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName.slice(0,-5)}-ptx.json`
-                      jsonld["@id"] = refURLPtx;
-                      await Promise.all([
-                      fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName.slice(0,-5)}-ptx.json`), JSON.stringify(jsonld, null, 2)),
-                      DefinedReference.findOneAndUpdate(
-                          {title},
-                          {
-                            type: directory,
-                            refURL: refURLPtx,
-                            ptxOriginURL ,
-                            jsonld: JSON.stringify(jsonld),
-                            uid
-                          },
-                          {upsert: true}
-                      )])
+                      // TODO: need more verification
+                      // const refURLPtx = `${process.env.API_URL?.slice(0, -3)}/static/${directory}/${fileName.slice(0,-5)}-ptx.json`
+                      // jsonld["@id"] = refURLPtx;
+                      // await Promise.all([
+                      // fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName.slice(0,-5)}-ptx.json`), JSON.stringify(jsonld, null, 2)),
+                      // DefinedReference.findOneAndUpdate(
+                      //     {title},
+                      //     {
+                      //       type: directory,
+                      //       refURL: refURLPtx,
+                      //       ptxOriginURL ,
+                      //       jsonld: JSON.stringify(jsonld),
+                      //       uid
+                      //     },
+                      //     {upsert: true}
+                      // )])
                     }
                   });
           } catch (error) {

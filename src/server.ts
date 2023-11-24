@@ -15,7 +15,7 @@ export const startServer = (testPort?: number) => {
   loadRoutes(app);
 
   // use of static files for json-ld
-  app.use("/static", express.static(__dirname + "../../static"));
+  app.use("/static/references", express.static(__dirname + "../../static"));
 
   // Start the server
   const server = app.listen(port, () => {

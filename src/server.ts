@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import { loadRoutes } from "./routes";
 import { loadMongoose } from "./config/database";
+import path from "path";
 
 export const startServer = (testPort?: number) => {
   loadMongoose();
@@ -15,7 +16,10 @@ export const startServer = (testPort?: number) => {
   loadRoutes(app);
 
   // use of static files for json-ld
-  app.use("/static", express.static(__dirname + "../../static"));
+  app.use(
+    "/static",
+    express.static(path.join(__dirname, "..", "..", "static"))
+  );
 
   // Start the server
   const server = app.listen(port, () => {

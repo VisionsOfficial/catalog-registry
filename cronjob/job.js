@@ -46,7 +46,6 @@ class Job {
             .exec();
 
           if (this.dbUpdateJobConfiguration && this.dbUpdateJobConfiguration.scheduled) {
-            console.log()
             switch (this.dbUpdateJobConfiguration.frequency) {
               // Every day at 4 AM
               case FrequencyEnum.DAILY:

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jobConfigurationSeed from "../seed/jobConfigurationSeed";
-import Job from "../../cronjob/dbUpdateJob";
+// @ts-ignore
+import DbUpdateJob from "../../cronjob/dbUpdateJob";
 
 export async function loadMongoose() {
   let mongoUri = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
@@ -20,7 +21,7 @@ export async function loadMongoose() {
   await jobConfigurationSeed().then(() => {
     // Job lauch after succesfully seeded the database
     // temprarily here to not broke the unit tests
-    Job();
+    new DbUpdateJob("dbUpdate");
 
     console.log("Seed succeeded");
   });

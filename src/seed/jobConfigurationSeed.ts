@@ -2,7 +2,7 @@ import { jobConfiguration } from "../models/JobConfiguration/JobConfiguration.mo
 import { FrequencyEnum } from "../utils/enums/frequencyEnum";
 
 const data = {
-  job: "dbUpdateJob",
+  job: "dbUpdate",
   scheduled: true,
   frequency: FrequencyEnum.DAILY,
 };

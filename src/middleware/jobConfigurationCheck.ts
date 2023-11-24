@@ -43,7 +43,7 @@ export const checkPayloadOnJobConfigurationUpdate = async (
     const body = req.body;
     const errors: string | any[] = [];
 
-    if (!(body.frequency in FrequencyEnum))
+    if (body.frequency && !(body.frequency in FrequencyEnum))
       throw new BadRequestError("frequency is not valid", [
         {
           field: "frequency",

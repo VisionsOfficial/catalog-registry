@@ -1,1 +1,1 @@
-export const jobs = ["dbUpdateJob"];
+export const jobs = ["dbUpdate"];

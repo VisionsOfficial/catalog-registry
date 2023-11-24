@@ -15,7 +15,7 @@
     "postinstall": "git clone https://github.com/Prometheus-X-association/reference-models.git && echo \"\n\nAll done, please setup your database with the reference models by running npm run db:init\"",
     "db:init": "node scripts/dbUpdate.js",
     "db:update": "rm -rf reference-models && git clone https://github.com/Prometheus-X-association/reference-models.git && node scripts/dbUpdate.js",
-    "ovh:install": "npm-node14 run build && cp .env dist/src && cp index.js app.js"
+    "ovh:install": "npm-node14 run build && cp .env dist/src && cd dist/src && cp index.js app.js"
   },
   "keywords": [
     "Prometheus-X",

@@ -17,7 +17,7 @@ export const startServer = (testPort?: number) => {
 
   // use of static files for json-ld
   app.use(
-    "/static",
+    "/static/references",
     express.static(path.join(__dirname, "..", "..", "static"))
   );
 

@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  express-app:
+    container_name: "catalog-registry"
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - mongodb
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://mongodb:27017/${MONGO_DATABASE}"
+    networks:
+      - catalog-registry
+
+  mongodb:
+    container_name: "mongodb"
+    build:
+      context: .
+      dockerfile: docker/mongodb/Dockerfile
+#    Uncomment to connect mongodb container to mongo compass or another service
+#    ports:
+#      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - catalog-registry
+
+networks:
+  catalog-registry:
+    driver: bridge
+
+volumes:
+  mongodb_data:

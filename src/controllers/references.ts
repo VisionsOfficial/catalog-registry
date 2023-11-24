@@ -3,6 +3,7 @@ import { DefinedReference } from "../models/DefinedReference/DefinedReference.mo
 import { mapLanguageValueArray } from "../utils/parseLanguageValue";
 import fs from "fs";
 import path from "path";
+import { NotFoundError } from "../errors/NotFoundError";
 
 /**
  * Retrieves all reference models
@@ -30,7 +31,33 @@ export const getReferencesByType = async (
 ) => {
   try {
     const { type } = req.params;
+    const { populate } = req.query;
     const data = await DefinedReference.find({ type });
+
+    if (type === "roles" && (populate === "true" || populate === "1")) {
+      await Promise.all(
+        data.map(async (role) => {
+          const roleJsonldData = JSON.parse(role.jsonld);
+          const jsonld = await DefinedReference.find(
+            {
+              uid: {
+                $in: roleJsonldData.responsibilitiesAndObligations,
+              },
+            },
+            {
+              _id: 0,
+              jsonld: 1,
+            }
+          ).lean();
+
+          roleJsonldData.responsibilitiesAndObligations = jsonld.map(
+            (item: any) => JSON.parse(item.jsonld)
+          );
+
+          role.jsonld = JSON.stringify(roleJsonldData);
+        })
+      );
+    }
     return res.json(data);
   } catch (err) {
     next(err);
@@ -149,6 +176,33 @@ export const createUserDefinedReference = async (
 
     return res.status(201).json(newRef);
   } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Retrieve a reference's jsonld field  parsed
+ */
+export const getByFileName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { type, fileName } = req.params;
+    const data = await DefinedReference.findOne({ type, uid: fileName }, {_id: 0, jsonld: 1 });
+
+    if (!data){
+      throw new NotFoundError("Reference not found")
+    }
+
+    return res.json(JSON.parse(data.jsonld));
+  } catch (err) {
+
+    if(err instanceof NotFoundError){
+      return res.status(404).json(err.jsonResponse())
+    }
+
     next(err);
   }
 };

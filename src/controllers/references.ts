@@ -34,11 +34,11 @@ export const getReferencesByType = async (
     const { populate } = req.query;
     const data = await DefinedReference.find({ type });
 
-    if (type === "roles" && populate) {
+    if (type === "roles" && (populate === "true" || populate === "1")) {
       await Promise.all(
         data.map(async (role) => {
           const roleJsonldData = JSON.parse(role.jsonld);
-          const test = await DefinedReference.find(
+          const jsonld = await DefinedReference.find(
             {
               uid: {
                 $in: roleJsonldData.responsibilitiesAndObligations,
@@ -48,9 +48,9 @@ export const getReferencesByType = async (
               _id: 0,
               jsonld: 1,
             }
-          );
+          ).lean();
 
-          roleJsonldData.responsibilitiesAndObligations = test.map(
+          roleJsonldData.responsibilitiesAndObligations = jsonld.map(
             (item: any) => JSON.parse(item.jsonld)
           );
 

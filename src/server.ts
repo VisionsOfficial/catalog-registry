@@ -28,9 +28,6 @@ export const startServer = (testPort?: number) => {
     );
   }
 
-  // use of static files for json-ld
-
-
   // Start the server
   const server = app.listen(port, () => {
     //eslint-disable-next-line

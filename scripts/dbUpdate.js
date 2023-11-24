@@ -46,16 +46,17 @@ mongoose
       type: { type: String, required: true },
       refURL: { type: String, required: false },
       ptxOriginURL: { type: String, required: false },
-      title: { type: String, unique: true, required: true },
+      title: { type: String, required: true },
       jsonld: { type: String, required: true },
       uid: { type: String, required: false },
     });
 
     const DefinedReference = mongoose.model("DefinedReference", schema);
-    await DefinedReference.collection.createIndex(
-      { title: 1 },
-      { unique: true }
-    );
+
+    // await DefinedReference.collection.createIndex(
+    //   { title: 1 },
+    //   { unique: true }
+    // );
 
     // dynamically retrieve all the directories needed to insert in database and copy in static dir in references directory
     const dir = await fs.promises.readdir(path.join(
@@ -108,7 +109,7 @@ mongoose
             ? jsonld["name"]
             : "";
 
-          const uid = jsonld["uid"] ?? fileName.slice(0,-5);
+          const uid = fileName.slice(0,-5);
 
           try {
             // Update or insert the document and create static file
@@ -119,7 +120,7 @@ mongoose
                       await Promise.all([
                           fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName}`), JSON.stringify(jsonld, null, 2)),
                       DefinedReference.findOneAndUpdate(
-                          {title},
+                          {title, type: directory, uid},
                           {type: directory, refURL, ptxOriginURL , jsonld: JSON.stringify(jsonld), uid},
                           {upsert: true}
                       )])

@@ -48,6 +48,7 @@ mongoose
       ptxOriginURL: { type: String, required: false },
       title: { type: String, unique: true, required: true },
       jsonld: { type: String, required: true },
+      uid: { type: String, required: false },
     });
 
     const DefinedReference = mongoose.model("DefinedReference", schema);
@@ -107,6 +108,8 @@ mongoose
             ? jsonld["name"]
             : "";
 
+          const uid = jsonld["uid"] ?? null;
+
           try {
             // Update or insert the document and create static file
               await fs.promises.mkdir(path.join(__dirname, `../static/${directory}`), {recursive: true})
@@ -117,7 +120,7 @@ mongoose
                           fs.promises.writeFile(path.join(__dirname, `../static/${directory}/${fileName}`), JSON.stringify(jsonld, null, 2)),
                       DefinedReference.findOneAndUpdate(
                           {title},
-                          {type: directory, refURL, ptxOriginURL , jsonld: JSON.stringify(jsonld)},
+                          {type: directory, refURL, ptxOriginURL , jsonld: JSON.stringify(jsonld), uid},
                           {upsert: true}
                       )])
                     }
@@ -133,7 +136,8 @@ mongoose
                             type: directory,
                             refURL: refURLPtx,
                             ptxOriginURL ,
-                            jsonld: JSON.stringify(jsonld)
+                            jsonld: JSON.stringify(jsonld),
+                            uid
                           },
                           {upsert: true}
                       )])

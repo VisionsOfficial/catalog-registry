@@ -100,6 +100,34 @@ describe("API Tests", () => {
     });
   });
 
+  describe("GET /v1/references/:type/:fileName", () => {
+    it("should return a valid response with an object", async () => {
+      const res = await request(app).get("/v1/references/architecture/base");
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an("object");
+    });
+  });
+
+  describe("GET /v1/references/:type/:fileName - invalid type", () => {
+    it("should return an error specifying the type is unknown", async () => {
+      const res = await request(app).get("/v1/references/unknowntype/base");
+      expect(res.status).to.equal(400);
+      expect(res.body)
+        .to.be.an("object")
+        .that.has.property("error", "Unknown Reference Type");
+    });
+  });
+
+  describe("GET /v1/references/:type/:fileName - not found file", () => {
+    it("should return an 404 error", async () => {
+      const res = await request(app).get("/v1/references/architecture/unknowFileName");
+      expect(res.status).to.equal(404);
+      expect(res.body)
+        .to.be.an("object")
+        .that.has.property("error", "Reference not found");
+    });
+  });
+
   describe("GET /v1/jobs - API KEY error", () => {
     it("should respond with code 400 and Header error", async () => {
       const response = await request(app).get("/v1/jobs");

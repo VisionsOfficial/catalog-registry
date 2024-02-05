@@ -75,15 +75,14 @@ class Job {
     this.job = cron.schedule(
       this.cronSchedule,
       () => {
-        exec(`node ./scripts/${this.jobName}.js`, (error, stdout, stderr) => {
+        exec(`npm run db:update`, (error) => {
           if (error) {
             // eslint-disable-next-line no-console,no-undef
-            console.log(`error: ${error.message}`);
             return;
           }
           // eslint-disable-next-line no-console,no-undef
-          console.log(`${this.constructor.name} Job Launched successfully`);
-        });
+          console.log(`${this.constructor.name} db:update successfully`);
+        })
       },
       {
         scheduled: this.dbUpdateJobConfiguration?.scheduled ?? true,

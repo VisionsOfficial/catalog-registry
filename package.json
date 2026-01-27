@@ -16,7 +16,7 @@
     "db:init": "node scripts/dbUpdate.js",
     "db:update": "rm -rf reference-models && git clone https://github.com/Prometheus-X-association/reference-models.git && node scripts/dbUpdate.js",
     "setup:instance": "node scripts/configureInstance.js",
-    "tar": "tar -czf ca-registry.tar.gz ./"
+    "tar": "tar --exclude=ca-registry.tar.gz -czf ca-registry.tar.gz ./"
   },
   "keywords": [
     "Prometheus-X",

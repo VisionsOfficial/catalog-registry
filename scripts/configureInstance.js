@@ -17,8 +17,8 @@ const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 if (missingEnvVars.length > 0) {
   console.error(
     `${RED} Missing environment variables: ${missingEnvVars.join(
-      ", "
-    )} ${RESET}`
+      ", ",
+    )} ${RESET}`,
   );
   process.exit(1);
 }
@@ -60,7 +60,7 @@ const getDefinition = (names) => {
   return {
     definition: names.map((name, lang) => {
       return {
-        "@language": lang,
+        "@language": lang || "en",
         "@value": name,
       };
     }),
@@ -71,7 +71,7 @@ const getDescription = (descriptions) => {
   return {
     description: descriptions.map((description, lang) => {
       return {
-        "@language": lang,
+        "@language": lang || "en",
         "@value": description,
       };
     }),
@@ -79,7 +79,13 @@ const getDescription = (descriptions) => {
 };
 
 const getUid = (title) => {
-  return title.toLowerCase().replace(/ /g, "-");
+  return title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-+/g, "-");
 };
 
 const clearStaticFiles = async (categories) => {
@@ -129,7 +135,7 @@ mongoose
         ...getDefinition(data.description ? [data.description] : []),
         ...getDescription(data.description ? [data.description] : []),
       });
-      
+
       const ptxOriginURL = refURL;
 
       await DefinedReference.findOneAndUpdate(
@@ -142,7 +148,7 @@ mongoose
           refURL,
           ptxOriginURL,
         },
-        { upsert: true }
+        { upsert: true },
       );
 
       const staticDir = path.join(__dirname, `../static/${category}`);
@@ -169,7 +175,7 @@ mongoose
       })
       .catch((error) => {
         console.error(
-          `${RED} Error processing instance configuration: ${error} ${RESET}`
+          `${RED} Error processing instance configuration: ${error} ${RESET}`,
         );
         process.exit(1);
       });
